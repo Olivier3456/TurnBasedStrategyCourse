@@ -4,10 +4,19 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
+    [SerializeField] private Animator unitAnimator;
+
     private Vector3 targetPosition;
+
+    private void Awake()
+    {
+        targetPosition = transform.position;
+    }
 
     private void Update()
     {
+        unitAnimator.SetBool("isWalking", true);
+
         float currentDistance = Vector3.Distance(transform.position, targetPosition);
         float stoppingDistance = 0.5f;
 
@@ -16,17 +25,20 @@ public class Unit : MonoBehaviour
             Vector3 moveDirection = (targetPosition - transform.position).normalized;
             float moveSpeed = 4f;
             transform.position += moveDirection * Time.deltaTime * moveSpeed;
-        }
 
-        if (Input.GetMouseButtonDown(0))
+            float rotateSpeed = 10f;
+            transform.forward = Vector3.Slerp(transform.forward, moveDirection, rotateSpeed * Time.deltaTime);
+
+            unitAnimator.SetBool("isWalking", true);
+        }
+        else
         {
-            Move(MouseWorld.GetPosition());
+            unitAnimator.SetBool("isWalking", false);
         }
     }
 
-    private void Move(Vector3 targetPosition)
+    public void Move(Vector3 targetPosition)
     {
         this.targetPosition = targetPosition;
     }
-
 }
