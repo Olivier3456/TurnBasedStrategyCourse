@@ -22,7 +22,6 @@ public class GridSystem
         {
             for (int z = 0; z < height; z++)
             {
-                //Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x, z) + Vector3.right * .2f, Color.white, 1000);
                 GridPosition gridPosition = new GridPosition(x, z);
                 GridObject gridObject = new GridObject(this, gridPosition);
                 gridObjectsArray[x, z] = gridObject;
@@ -30,9 +29,9 @@ public class GridSystem
         }
     }
 
-    public Vector3 GetWorldPosition(int x, int z)
+    public Vector3 GetWorldPosition(GridPosition gridPosition)
     {
-        return new Vector3(x, 0, z) * cellsize;
+        return new Vector3(gridPosition.x, 0, gridPosition.z) * cellsize;
     }
 
     public GridPosition GetGridPosition(Vector3 worldPosition)
@@ -49,8 +48,17 @@ public class GridSystem
         {
             for (int z = 0; z < height; z++)
             {
-               GameObject.Instantiate(debugPrefab, GetWorldPosition(x, z), Quaternion.identity);
+                GridPosition gridPosition = new GridPosition(x, z);
+
+                Transform deBugTransform = GameObject.Instantiate(debugPrefab, GetWorldPosition(gridPosition), Quaternion.identity);
+                GridDebugObject gridDebugObject = deBugTransform.GetComponent<GridDebugObject>();
+                gridDebugObject.SetGridObject(GetGridObject(gridPosition));
             }
         }
+    }
+
+    public GridObject GetGridObject(GridPosition gridPosition)
+    {
+        return gridObjectsArray[gridPosition.x, gridPosition.z];
     }
 }
