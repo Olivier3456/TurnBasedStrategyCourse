@@ -303,7 +303,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.30063933, y: 6.62675e-10, z: -2.0888989e-10, w: 0.9537379}
+  m_LocalRotation: {x: 0.30063936, y: -0.0000000034212502, z: 0.0000000010784542,
+    w: 0.9537379}
   m_LocalPosition: {x: 0, y: 7, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -709,7 +710,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 651560734}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.30063936, y: 5.256822e-10, z: 2.2570139e-10, w: 0.9537379}
+  m_LocalRotation: {x: 0.3006394, y: -0.0000000034212504, z: 0.000000001078454, w: 0.9537379}
   m_LocalPosition: {x: 0, y: 7, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -929,6 +930,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 934075724}
+  - component: {fileID: 934075725}
   m_Layer: 0
   m_Name: Camera Controller
   m_TagString: Untagged
@@ -951,6 +953,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &934075725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 934075723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68719796ca0f14741af81a9a9b7c569d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cinemachineVirtualCamera: {fileID: 651560735}
 --- !u!1001 &1300260950
 PrefabInstance:
   m_ObjectHideFlags: 0
