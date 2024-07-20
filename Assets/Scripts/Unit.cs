@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    [SerializeField] private Animator unitAnimator;
-
-    private Vector3 targetPosition;
     private GridPosition gridPosition;
+
+    private MoveAction moveAction;
+    private SpinAction spinAction;
+    private BaseAction[] baseActionArray;
 
     private void Awake()
     {
-        targetPosition = transform.position;
+        moveAction = GetComponent<MoveAction>();
+        spinAction = GetComponent<SpinAction>();
+        baseActionArray = GetComponents<BaseAction>();
     }
+
 
     private void Start()
     {
@@ -23,39 +27,31 @@ public class Unit : MonoBehaviour
 
     private void Update()
     {
-        unitAnimator.SetBool("isWalking", true);
-
-        float currentDistance = Vector3.Distance(transform.position, targetPosition);
-        float stoppingDistance = 0.5f;
-
-        if (currentDistance > stoppingDistance)
-        {
-            Vector3 moveDirection = (targetPosition - transform.position).normalized;
-            float moveSpeed = 4f;
-            transform.position += moveDirection * Time.deltaTime * moveSpeed;
-
-            float rotateSpeed = 10f;
-            transform.forward = Vector3.Slerp(transform.forward, moveDirection, rotateSpeed * Time.deltaTime);
-
-            unitAnimator.SetBool("isWalking", true);
-        }
-        else
-        {
-            unitAnimator.SetBool("isWalking", false);
-        }
-
-
         GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
         if (newGridPosition != gridPosition)
         {
             LevelGrid.Instance.UnitMovedGridPosition(this, gridPosition, newGridPosition);
             gridPosition = newGridPosition;
         }
-
     }
 
-    public void Move(Vector3 targetPosition)
+    public MoveAction GetMoveAction()
     {
-        this.targetPosition = targetPosition;
+        return moveAction;
+    }
+    public SpinAction GetSpinAction()
+    {
+        return spinAction;
+    }
+
+    public BaseAction[] GetBaseActionArray()
+    {
+        return baseActionArray;
+    }
+
+
+    public GridPosition GetGridPosition()
+    {
+        return gridPosition;
     }
 }
