@@ -53,5 +53,5 @@ public class Unit : MonoBehaviour
     public GridPosition GetGridPosition()
     {
         return gridPosition;
-    }
+    }    
 }
