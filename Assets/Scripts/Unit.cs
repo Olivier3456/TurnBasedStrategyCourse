@@ -14,6 +14,8 @@ public class Unit : MonoBehaviour
     private BaseAction[] baseActionArray;
     private int actionPoints = ACTION_POINTS_MAX;
 
+    [SerializeField] private bool isEnemy;
+
     public static event EventHandler OnAnyActionPointsChanged;
 
     private void Awake()
@@ -34,8 +36,13 @@ public class Unit : MonoBehaviour
 
     private void TurnSystem_OnTurnChanged(object sender, System.EventArgs e)
     {
-        actionPoints = ACTION_POINTS_MAX;
-        OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
+        // We only refresh the action points if this the turn this type of unit: player/enemy
+        if (IsEnemy() && !TurnSystem.Instance.IsPlayerTurn() ||
+            !IsEnemy() && TurnSystem.Instance.IsPlayerTurn())
+        {
+            actionPoints = ACTION_POINTS_MAX;
+            OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     private void Update()
@@ -96,5 +103,10 @@ public class Unit : MonoBehaviour
     public int GetActionPoints()
     {
         return actionPoints;
+    }
+
+    public bool IsEnemy()
+    {
+        return isEnemy;
     }
 }
