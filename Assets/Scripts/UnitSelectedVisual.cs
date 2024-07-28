@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UnitSelectedVisual : MonoBehaviour
@@ -35,5 +36,10 @@ public class UnitSelectedVisual : MonoBehaviour
         {
             meshRenderer.enabled = false;
         }
+    }
+
+    private void OnDestroy()
+    {
+        UnitActionSystem.Instance.OnUnitSelectedChanged -= UnitActionSystem_OnUnitSelectedChanged;
     }
 }
