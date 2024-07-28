@@ -7,11 +7,11 @@ using UnityEngine.EventSystems;
 
 public class MoveAction : BaseAction
 {
-    [SerializeField] private Animator unitAnimator;
-
     [SerializeField] private int maxMoveDistance = 4;
-
     private Vector3 targetPosition;
+    public event EventHandler OnStartMoving;
+    public event EventHandler OnStopMoving;
+
 
 
     protected override void Awake()
@@ -38,14 +38,11 @@ public class MoveAction : BaseAction
         {
             float moveSpeed = 4f;
             transform.position += moveDirection * Time.deltaTime * moveSpeed;
-
-            unitAnimator.SetBool("isWalking", true);
         }
         else
         {
-            unitAnimator.SetBool("isWalking", false);
-            isActive = false;
-            onActionComplete();
+            OnStopMoving?.Invoke(this, EventArgs.Empty);
+            ActionComplete();
         }
 
         float rotateSpeed = 10f;
@@ -55,9 +52,9 @@ public class MoveAction : BaseAction
 
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
     {
-        isActive = true;
-        this.onActionComplete = onActionComplete;
-        this.targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
+        ActionStart(onActionComplete);
+        targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
+        OnStartMoving?.Invoke(this, EventArgs.Empty);
     }    
 
 
