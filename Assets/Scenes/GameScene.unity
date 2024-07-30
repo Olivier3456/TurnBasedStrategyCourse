@@ -3277,6 +3277,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridSystemVisualSinglePrefab: {fileID: 8139099426614610551, guid: de4f803e886c1644ebbfe8cd92bdbd1c,
     type: 3}
+  gridVisualTypeMaterialList:
+  - gridVisualType: 0
+    material: {fileID: 2100000, guid: 8075651198615894cae93d68c685bf53, type: 2}
+  - gridVisualType: 1
+    material: {fileID: 2100000, guid: 7dbd16baa56d5a04fab4ba5d3eda037f, type: 2}
+  - gridVisualType: 2
+    material: {fileID: 2100000, guid: ab68413fda4a04f4099afd53cb160234, type: 2}
+  - gridVisualType: 4
+    material: {fileID: 2100000, guid: e7e74417be015f74696cddc53dcb22d2, type: 2}
+  - gridVisualType: 3
+    material: {fileID: 2100000, guid: 2f22819d46be4664e95f0a3316f04ff2, type: 2}
 --- !u!1001 &6393165905254686931
 PrefabInstance:
   m_ObjectHideFlags: 0

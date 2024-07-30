@@ -55,13 +55,11 @@ public class CameraManager : MonoBehaviour
 
     private void ShowActionCamera()
     {
-        Debug.Log("Showing action camera");
         actionCameraGameObject.transform.gameObject.SetActive(true);
     }
 
     private void HideActionCamera()
     {
-        Debug.Log("Hiding action camera");
         actionCameraGameObject.SetActive(false);
     }
 }

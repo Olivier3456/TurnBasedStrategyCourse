@@ -159,12 +159,17 @@ public class ShootAction : BaseAction
         float aimingStateTime = 1f;
         stateTimer = aimingStateTime;
         canShootBullet = true;
-        
+
         ActionStart(onActionComplete);
     }
 
     public Unit GetTargetUnit()
     {
         return targetUnit;
+    }
+
+    public int GetMaxShootDistance()
+    {
+        return maxShootDistance;
     }
 }
