@@ -30,7 +30,7 @@ public class MoveAction : BaseAction
 
 
         Vector3 moveDirection = (targetPosition - transform.position).normalized;
-        
+
         float stoppingDistance = 0.05f;
         float currentDistance = Vector3.Distance(transform.position, targetPosition);
 
@@ -55,7 +55,7 @@ public class MoveAction : BaseAction
         targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
         OnStartMoving?.Invoke(this, EventArgs.Empty);
         ActionStart(onActionComplete);
-    }    
+    }
 
 
     public override List<GridPosition> GetValidActionGridPositionList()
@@ -95,5 +95,15 @@ public class MoveAction : BaseAction
     public override string getActionName()
     {
         return "Move";
+    }
+
+    public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
+    {
+        int targetCountAtGridPosition = unit.GetAction<ShootAction>().GetTargetCountAtPosition(gridPosition);
+        return new EnemyAIAction
+        {
+            gridPosition = gridPosition,
+            actionValue = targetCountAtGridPosition * 10
+        };
     }
 }
