@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 845507763714265758}
   - component: {fileID: 1671720389919120026}
   m_Layer: 0
-  m_Name: Text (TMP)
+  m_Name: Grid Position text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -216,4 +216,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a8927811c442e5479d72accd038c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textMeshPro: {fileID: 1671720389919120026}
+  gridPositionText: {fileID: 1671720389919120026}
