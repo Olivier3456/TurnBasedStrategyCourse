@@ -9,7 +9,7 @@ public class LevelGrid : MonoBehaviour
 
     public event EventHandler OnAnyUnitMovedGridPosition;
 
-    private GridSystem gridSystem;
+    private GridSystem<GridObject> gridSystem;
 
     public static LevelGrid Instance { get; private set; }
 
@@ -27,7 +27,9 @@ public class LevelGrid : MonoBehaviour
             return;
         }
 
-        gridSystem = new GridSystem(10, 10, 2f);
+        gridSystem = new GridSystem<GridObject>(10, 10, 2f,
+        (GridSystem<GridObject> g, GridPosition gridPosition) => new GridObject(g, gridPosition));
+        
         gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
     }
 
