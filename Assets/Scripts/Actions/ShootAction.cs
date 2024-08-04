@@ -29,6 +29,8 @@ public class ShootAction : BaseAction
     private Unit targetUnit;
     private bool canShootBullet;
 
+    [SerializeField] private LayerMask obstaclesLayerMask;
+
 
 
     private void Update()
@@ -127,7 +129,7 @@ public class ShootAction : BaseAction
                 GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
 
                 if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))  // Not on the grid.
-                {                    
+                {
                     continue;
                 }
 
@@ -136,7 +138,7 @@ public class ShootAction : BaseAction
                 {
                     continue;
                 }
-                
+
                 if (!LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))  // No unit on this grid position.
                 {
                     continue;
@@ -145,6 +147,19 @@ public class ShootAction : BaseAction
                 Unit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(testGridPosition);
 
                 if (targetUnit.IsEnemy() == unit.IsEnemy()) // The target is on the same team as the unit.
+                {
+                    continue;
+                }
+
+                Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridPosition);
+                Vector3 shootDir = (targetUnit.GetWorldPosition() - unitWorldPosition).normalized;
+                float unitShoulderHeight = 1.7f;
+                if (Physics.Raycast(unitWorldPosition + Vector3.up * unitShoulderHeight,
+                                    shootDir,
+                                    Vector3.Distance(unitWorldPosition, targetUnit.GetWorldPosition()),
+                                    obstaclesLayerMask
+
+                ))  // Blocked by an obstacle
                 {
                     continue;
                 }
