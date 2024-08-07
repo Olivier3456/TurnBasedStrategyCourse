@@ -4,8 +4,8 @@ public class GridObject
 {
     private GridSystem<GridObject> gridSystem;
     private GridPosition gridPosition;
-
     private List<Unit> unitsList = new List<Unit>();
+    private Door door;
 
     public GridObject(GridSystem<GridObject> gridSystem, GridPosition gridPosition)
     {
@@ -20,7 +20,7 @@ public class GridObject
 
     public override string ToString()
     {
-        string unitString = "";        
+        string unitString = "";
         foreach (var unit in unitsList)
         {
             unitString += unit + "\n";
@@ -57,5 +57,15 @@ public class GridObject
         }
 
         return null;
+    }
+
+    public Door GetDoor()
+    {
+        return door;
+    }
+
+    public void SetDoor(Door door)
+    {
+        this.door = door;
     }
 }
