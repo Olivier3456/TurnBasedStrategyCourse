@@ -9,7 +9,7 @@ public class LevelGrid : MonoBehaviour
 
     public event EventHandler OnAnyUnitMovedGridPosition;
 
-    private GridSystem<GridObject> gridSystem;
+    private GridSystemHex<GridObject> gridSystem;
 
     public static LevelGrid Instance { get; private set; }
 
@@ -31,8 +31,8 @@ public class LevelGrid : MonoBehaviour
             return;
         }
 
-        gridSystem = new GridSystem<GridObject>(width, height, cellSize,
-        (GridSystem<GridObject> g, GridPosition gridPosition) => new GridObject(g, gridPosition));
+        gridSystem = new GridSystemHex<GridObject>(width, height, cellSize,
+        (GridSystemHex<GridObject> g, GridPosition gridPosition) => new GridObject(g, gridPosition));
 
         //gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
     }
