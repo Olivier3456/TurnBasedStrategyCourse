@@ -53,6 +53,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Click"",
+                    ""type"": ""Button"",
+                    ""id"": ""a5c47f6a-b373-46cf-9f99-5ebcb4e58340"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -149,9 +158,20 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""id"": ""931912b9-e107-421c-9fe3-c7ea19094bdc"",
                     ""path"": ""<Mouse>/scroll/y"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""Clamp(min=-1,max=1),Invert"",
                     ""groups"": """",
                     ""action"": ""CameraZoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""24018c3b-9e5c-44c3-96b8-06ed968c86f8"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -165,6 +185,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_CameraMovement = m_Player.FindAction("CameraMovement", throwIfNotFound: true);
         m_Player_CameraRotate = m_Player.FindAction("CameraRotate", throwIfNotFound: true);
         m_Player_CameraZoom = m_Player.FindAction("CameraZoom", throwIfNotFound: true);
+        m_Player_Click = m_Player.FindAction("Click", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -229,6 +250,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_CameraMovement;
     private readonly InputAction m_Player_CameraRotate;
     private readonly InputAction m_Player_CameraZoom;
+    private readonly InputAction m_Player_Click;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -236,6 +258,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @CameraMovement => m_Wrapper.m_Player_CameraMovement;
         public InputAction @CameraRotate => m_Wrapper.m_Player_CameraRotate;
         public InputAction @CameraZoom => m_Wrapper.m_Player_CameraZoom;
+        public InputAction @Click => m_Wrapper.m_Player_Click;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -254,6 +277,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @CameraZoom.started += instance.OnCameraZoom;
             @CameraZoom.performed += instance.OnCameraZoom;
             @CameraZoom.canceled += instance.OnCameraZoom;
+            @Click.started += instance.OnClick;
+            @Click.performed += instance.OnClick;
+            @Click.canceled += instance.OnClick;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -267,6 +293,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @CameraZoom.started -= instance.OnCameraZoom;
             @CameraZoom.performed -= instance.OnCameraZoom;
             @CameraZoom.canceled -= instance.OnCameraZoom;
+            @Click.started -= instance.OnClick;
+            @Click.performed -= instance.OnClick;
+            @Click.canceled -= instance.OnClick;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -289,5 +318,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnCameraMovement(InputAction.CallbackContext context);
         void OnCameraRotate(InputAction.CallbackContext context);
         void OnCameraZoom(InputAction.CallbackContext context);
+        void OnClick(InputAction.CallbackContext context);
     }
 }

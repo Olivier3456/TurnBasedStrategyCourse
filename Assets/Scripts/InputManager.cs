@@ -37,9 +37,13 @@ public class InputManager : MonoBehaviour
 
 
 
-    public bool IsMouseButtonDown()
+    public bool IsMouseButtonDownThisFrame()
     {
+#if USE_NEW_INPUT_SYSTEM
+        return playerInputActions.Player.Click.WasPressedThisFrame();
+#else
         return Input.GetMouseButtonDown(0);
+#endif
     }
 
     public Vector2 GetCameraMoveVector()
@@ -87,6 +91,9 @@ public class InputManager : MonoBehaviour
 
     public float GetCameraZoomAmount()
     {
+#if USE_NEW_INPUT_SYSTEM
+        return playerInputActions.Player.CameraZoom.ReadValue<float>();
+#else
         if (Input.mouseScrollDelta.y > 0)
         {
             return -1f;
@@ -96,5 +103,6 @@ public class InputManager : MonoBehaviour
             return 1f;
         }
         return 0f;
+#endif
     }
 }
