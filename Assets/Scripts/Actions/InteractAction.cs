@@ -54,7 +54,6 @@ public class InteractAction : BaseAction
                     continue;
                 }
 
-
                 validGridPositionList.Add(testGridPosition);
             }
         }
