@@ -16,5 +16,5 @@ public class GridSystemVisualSingle : MonoBehaviour
     public void Hide()
     {
         meshRenderer.enabled = false;
-    }
+    }   
 }

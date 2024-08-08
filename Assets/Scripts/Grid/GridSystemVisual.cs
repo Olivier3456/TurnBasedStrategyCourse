@@ -11,6 +11,7 @@ public class GridSystemVisual : MonoBehaviour
 
     public static GridSystemVisual Instance { get; private set; }
 
+
     [SerializeField] private List<GridVisualTypeMaterial> gridVisualTypeMaterialList;
 
     [Serializable]
@@ -62,16 +63,7 @@ public class GridSystemVisual : MonoBehaviour
         LevelGrid.Instance.OnAnyUnitMovedGridPosition += LevelGrid_OnAnyUnitMovedGridPosition;
 
         UpdateGridVisual();
-
-        for (int x = 0; x < LevelGrid.Instance.GetWidth(); x++)
-        {
-            for (int z = 0; z < LevelGrid.Instance.GetHeight(); z++)
-            {
-                gridSystemVisualSingleArray[x, z].Show(GetGridVisualTypeMaterial(GridVisualType.White));
-            }
-        }
     }
-
 
 
     private void UnitActionSystem_OnActionSelectedChanged(object sender, EventArgs e)

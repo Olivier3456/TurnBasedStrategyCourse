@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 
 public class GridSystemHex<TGridObject>
@@ -44,10 +45,36 @@ public class GridSystemHex<TGridObject>
 
     public GridPosition GetGridPosition(Vector3 worldPosition)
     {
-        return new GridPosition(
+        GridPosition roughXZ = new GridPosition(
             Mathf.RoundToInt(worldPosition.x / cellsize),
-            Mathf.RoundToInt(worldPosition.z / cellsize)
+            Mathf.RoundToInt(worldPosition.z / cellsize / HEX_VERTICAL_OFFSET_MULTIPLIER)
             );
+
+        bool oddRow = roughXZ.z % 2 == 1;
+
+        List<GridPosition> neightbourGridPositionList = new List<GridPosition>()
+            {
+                roughXZ + new GridPosition(-1, 0),
+                roughXZ + new GridPosition(+1, 0),
+
+                roughXZ + new GridPosition(0, +1),
+                roughXZ + new GridPosition(0, -1),
+
+                roughXZ + new GridPosition(oddRow ? +1 : -1, +1),
+                roughXZ + new GridPosition(oddRow ? +1 : -1, -1),
+            };
+
+        GridPosition closestGridPosition = roughXZ;
+        foreach (GridPosition neighbourGridPosition in neightbourGridPositionList)
+        {
+            if (Vector3.Distance(worldPosition, LevelGrid.Instance.GetWorldPosition(neighbourGridPosition)) <
+                Vector3.Distance(worldPosition, LevelGrid.Instance.GetWorldPosition(closestGridPosition)))
+            {
+                closestGridPosition = neighbourGridPosition;
+            }
+        }
+
+        return closestGridPosition;
     }
 
     public void CreateDebugObjects(Transform debugPrefab)
