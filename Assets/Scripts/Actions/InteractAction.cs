@@ -40,7 +40,7 @@ public class InteractAction : BaseAction
         {
             for (int z = -maxInteractDistance; z <= maxInteractDistance; z++)
             {
-                GridPosition offsetGridPosition = new GridPosition(x, z);
+                GridPosition offsetGridPosition = new GridPosition(x, z, 0);
                 GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
 
                 if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))  // Not on the grid.

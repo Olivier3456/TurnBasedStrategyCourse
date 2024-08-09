@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst;
 using UnityEngine;
 
 public class GridSystem<TGridObject>
@@ -9,15 +10,21 @@ public class GridSystem<TGridObject>
     private int height;
     private float cellsize;
     private TGridObject[,] gridObjectsArray;
+    private int floor;
+    private float floorHeight;
 
     public GridSystem(int width,
                         int height,
                         float cellsize,
+                        int floor,
+                        float floorHeight,
                         Func<GridSystem<TGridObject>, GridPosition, TGridObject> createGridObject)
     {
         this.width = width;
         this.height = height;
         this.cellsize = cellsize;
+        this.floor = floor;
+        this.floorHeight = floorHeight;
 
         gridObjectsArray = new TGridObject[width, height];
 
@@ -25,7 +32,7 @@ public class GridSystem<TGridObject>
         {
             for (int z = 0; z < height; z++)
             {
-                GridPosition gridPosition = new GridPosition(x, z);
+                GridPosition gridPosition = new GridPosition(x, z, floor);
                 TGridObject gridObject = createGridObject(this, gridPosition);
                 gridObjectsArray[x, z] = gridObject;
             }
@@ -34,14 +41,16 @@ public class GridSystem<TGridObject>
 
     public Vector3 GetWorldPosition(GridPosition gridPosition)
     {
-        return new Vector3(gridPosition.x, 0, gridPosition.z) * cellsize;
+        return new Vector3(gridPosition.x, 0, gridPosition.z) * cellsize +
+        new Vector3(0, gridPosition.floor, 0) * floorHeight;
     }
 
     public GridPosition GetGridPosition(Vector3 worldPosition)
     {
         return new GridPosition(
             Mathf.RoundToInt(worldPosition.x / cellsize),
-            Mathf.RoundToInt(worldPosition.z / cellsize)
+            Mathf.RoundToInt(worldPosition.z / cellsize),
+            floor
             );
     }
 
@@ -51,7 +60,7 @@ public class GridSystem<TGridObject>
         {
             for (int z = 0; z < height; z++)
             {
-                GridPosition gridPosition = new GridPosition(x, z);
+                GridPosition gridPosition = new GridPosition(x, z, floor);
 
                 Transform deBugTransform = GameObject.Instantiate(debugPrefab, GetWorldPosition(gridPosition), Quaternion.identity);
                 GridDebugObject gridDebugObject = deBugTransform.GetComponent<GridDebugObject>();
@@ -70,7 +79,8 @@ public class GridSystem<TGridObject>
         return gridPosition.x >= 0 &&
             gridPosition.z >= 0 &&
             gridPosition.x < width &&
-            gridPosition.z < height;
+            gridPosition.z < height &&
+            gridPosition.floor == floor;
     }
 
     public int GetWidth()

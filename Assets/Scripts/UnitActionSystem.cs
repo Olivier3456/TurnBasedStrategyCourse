@@ -40,6 +40,8 @@ public class UnitActionSystem : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition()));
+
         if (isBusy)
         {
             return;

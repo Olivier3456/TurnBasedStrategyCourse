@@ -98,7 +98,7 @@ public class ShootAction : BaseAction
             shootingUnit = unit,
         });
 
-         OnAnyShoot?.Invoke(this, new OnShootEventArgs
+        OnAnyShoot?.Invoke(this, new OnShootEventArgs
         {
             targetUnit = targetUnit,
             shootingUnit = unit,
@@ -132,7 +132,7 @@ public class ShootAction : BaseAction
         {
             for (int z = -maxShootDistance; z <= maxShootDistance; z++)
             {
-                GridPosition offsetGridPosition = new GridPosition(x, z);
+                GridPosition offsetGridPosition = new GridPosition(x, z, 0);
                 GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
 
                 if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))  // Not on the grid.
