@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Unity.VisualScripting;
 using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
 
@@ -8,7 +9,6 @@ public class Pathfinding : MonoBehaviour
 {
     public static Pathfinding Instance { get; private set; }
     private const int MOVE_STRAIGHT_COST = 10;
-    private const int MOVE_DIAGONAL_COST = 14;
 
     [SerializeField] private Transform gridDebugObjectPrefab;
     [SerializeField] private LayerMask obstaclesLayerMask;
@@ -42,8 +42,6 @@ public class Pathfinding : MonoBehaviour
 
         gridSystem = new GridSystemHex<PathNode>(width, height, cellSize,
             (GridSystemHex<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
-
-        //gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
 
         for (int x = 0; x < width; x++)
         {
@@ -91,7 +89,7 @@ public class Pathfinding : MonoBehaviour
         }
 
         startNode.SetGCost(0);
-        startNode.SetHCost(CalculateDistance(startGridPosition, endGridPosition));
+        startNode.SetHCost(CalculateHeuristicDistance(startGridPosition, endGridPosition));
         startNode.CalculateFCost();
 
         while (openList.Count > 0)
@@ -121,13 +119,13 @@ public class Pathfinding : MonoBehaviour
                     continue;
                 }
 
-                int tentativeGCost = currentNode.GetGCost() + CalculateDistance(currentNode.GetGridPosition(), neighbourNode.GetGridPosition());
+                int tentativeGCost = currentNode.GetGCost() + MOVE_STRAIGHT_COST;
 
                 if (tentativeGCost < neighbourNode.GetGCost())
                 {
                     neighbourNode.SetCameFromPathNode(currentNode);
                     neighbourNode.SetGCost(tentativeGCost);
-                    neighbourNode.SetHCost(CalculateDistance(neighbourNode.GetGridPosition(), endGridPosition));
+                    neighbourNode.SetHCost(CalculateHeuristicDistance(neighbourNode.GetGridPosition(), endGridPosition));
                     neighbourNode.CalculateFCost();
 
                     if (!openList.Contains(neighbourNode))
@@ -143,15 +141,10 @@ public class Pathfinding : MonoBehaviour
         return null;
     }
 
-    public int CalculateDistance(GridPosition gridPositionA, GridPosition gridPositionB)
+    public int CalculateHeuristicDistance(GridPosition gridPositionA, GridPosition gridPositionB)
     {
-        GridPosition gridPositionDistance = gridPositionA - gridPositionB;
-        int xDistance = Mathf.Abs(gridPositionDistance.x);
-        int zDistance = Mathf.Abs(gridPositionDistance.z);
-
-        int remaining = Mathf.Abs(xDistance - zDistance);
-
-        return MOVE_DIAGONAL_COST * Mathf.Min(xDistance, zDistance) + MOVE_STRAIGHT_COST * remaining;
+        return Mathf.RoundToInt(MOVE_STRAIGHT_COST *
+            Vector3.Distance(gridSystem.GetWorldPosition(gridPositionA), gridSystem.GetWorldPosition(gridPositionB)));
     }
 
 
@@ -182,46 +175,53 @@ public class Pathfinding : MonoBehaviour
 
         GridPosition gridPosition = currentNode.GetGridPosition();
 
-        // Left
-        if (gridPosition.x - 1 >= 0)    // It is not the first column (left side of the grid)
-        {
-            neighbourList.Add(GetNode(gridPosition.x - 1, gridPosition.z + 0)); // Left
+        bool oddRow = gridPosition.z % 2 == 1;
 
-            if (gridPosition.z - 1 >= 0)
+        List<GridPosition> neightbourGridPositionList = new List<GridPosition>();
+
+        if (gridPosition.x - 1 >= 0)
+        {
+            neightbourGridPositionList.Add(gridPosition + new GridPosition(-1, 0));
+
+            if (!oddRow && gridPosition.z - 1 >= 0)
             {
-                neighbourList.Add(GetNode(gridPosition.x - 1, gridPosition.z - 1)); // Left Down
+                neightbourGridPositionList.Add(gridPosition + new GridPosition(-1, -1));
             }
 
-            if (gridPosition.z + 1 < gridSystem.getHeight())
+            if (!oddRow && gridPosition.z + 1 < gridSystem.getHeight())
             {
-                neighbourList.Add(GetNode(gridPosition.x - 1, gridPosition.z + 1)); // Left Up
+                neightbourGridPositionList.Add(gridPosition + new GridPosition(-1, +1));
             }
         }
 
-        // Right
-        if (gridPosition.x + 1 < gridSystem.GetWidth())    // It is not the last column (right side of the grid)
+        if (gridPosition.x + 1 < gridSystem.GetWidth())
         {
-            neighbourList.Add(GetNode(gridPosition.x + 1, gridPosition.z + 0)); // Right
+            neightbourGridPositionList.Add(gridPosition + new GridPosition(+1, 0));
 
-            if (gridPosition.z - 1 >= 0)
+            if (oddRow && gridPosition.z - 1 >= 0)
             {
-                neighbourList.Add(GetNode(gridPosition.x + 1, gridPosition.z - 1)); // Right Down
+                neightbourGridPositionList.Add(gridPosition + new GridPosition(+1, -1));
             }
 
-            if (gridPosition.z + 1 < gridSystem.getHeight())
+            if (oddRow && gridPosition.z + 1 < gridSystem.getHeight())
             {
-                neighbourList.Add(GetNode(gridPosition.x + 1, gridPosition.z + 1)); // Right Up
+                neightbourGridPositionList.Add(gridPosition + new GridPosition(+1, +1));
             }
         }
 
         if (gridPosition.z - 1 >= 0)
         {
-            neighbourList.Add(GetNode(gridPosition.x + 0, gridPosition.z - 1)); // Down
+            neightbourGridPositionList.Add(gridPosition + new GridPosition(0, -1));
         }
 
         if (gridPosition.z + 1 < gridSystem.getHeight())
         {
-            neighbourList.Add(GetNode(gridPosition.x + 0, gridPosition.z + 1)); // Up
+            neightbourGridPositionList.Add(gridPosition + new GridPosition(0, +1));
+        }
+
+        foreach (GridPosition gp in neightbourGridPositionList)
+        {
+            neighbourList.Add(GetNode(gp.x, gp.z));
         }
 
         return neighbourList;
@@ -274,5 +274,5 @@ public class Pathfinding : MonoBehaviour
     {
         FindPath(startGridPosition, endGridPosition, out int pathLength);
         return pathLength;
-    }    
+    }
 }
