@@ -1,17 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
 public class CameraController : MonoBehaviour
 {
+    public static CameraController Instance { get; private set; }
+
     [SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
 
     private const float MIN_FOLLOW_Y_OFFSET = 2f;
-    private const float MAX_FOLLOW_Y_OFFSET = 12f;
+    private const float MAX_FOLLOW_Y_OFFSET = 15f;
 
     CinemachineTransposer cinemachineTransposer;
     private Vector3 targetFollowOffset;
+
+
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Debug.LogError($"An instance of {this.GetType()} already exists!");
+            Destroy(gameObject);
+            return;
+        }
+    }
+
 
     private void Start()
     {
@@ -31,7 +48,7 @@ public class CameraController : MonoBehaviour
     {
         Vector2 inputMoveDir = InputManager.Instance.GetCameraMoveVector();
 
-        float moveSpeed = 5f;
+        float moveSpeed = 20f;
         Vector3 moveVector = transform.forward * inputMoveDir.y + transform.right * inputMoveDir.x;
         transform.position += moveVector * moveSpeed * Time.deltaTime;
     }
@@ -42,7 +59,7 @@ public class CameraController : MonoBehaviour
         Vector3 rotationVector = Vector3.zero;
         rotationVector.y = InputManager.Instance.GetCameraRotateAmount();
 
-        float rotationSpeed = 100f;
+        float rotationSpeed = 150f;
         transform.eulerAngles += rotationVector * rotationSpeed * Time.deltaTime;
     }
 
@@ -54,5 +71,10 @@ public class CameraController : MonoBehaviour
 
         float zoomSpeed = 5f;
         cinemachineTransposer.m_FollowOffset = Vector3.Lerp(cinemachineTransposer.m_FollowOffset, targetFollowOffset, zoomSpeed * Time.deltaTime);
+    }
+
+    public float GetCameraHeight()
+    {
+        return targetFollowOffset.y;
     }
 }

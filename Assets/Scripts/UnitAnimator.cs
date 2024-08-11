@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class UnitAnimator : MonoBehaviour
@@ -20,6 +21,7 @@ public class UnitAnimator : MonoBehaviour
         {
             moveAction.OnStartMoving += MoveAction_OnStartMoving;
             moveAction.OnStopMoving += MoveAction_OnStopMoving;
+            moveAction.OnChangedFloorsStarted += MoveAction_OnChangedFloorsStarted;
 
         }
 
@@ -34,6 +36,7 @@ public class UnitAnimator : MonoBehaviour
             swordAction.OnSwordActionCompleted += SwordAction_OnSwordActionCompleted;
         }
     }
+
 
     private void Start()
     {
@@ -51,14 +54,29 @@ public class UnitAnimator : MonoBehaviour
         EquipRifle();
     }
 
+    private void MoveAction_OnChangedFloorsStarted(object sender, MoveAction.OnChangedFloorsStartedEventArgs e)
+    {
+        if (e.targetGridPosition.floor > e.unitGridPosition.floor)
+        {
+            animator.SetTrigger("JumpUp");
+        }
+        else
+        {
+            animator.SetTrigger("JumpDown");
+        }
+    }
+
 
     private void ShootAction_OnShoot(object sender, ShootAction.OnShootEventArgs e)
     {
         animator.SetTrigger("shoot");
         Transform bulletProjectileTransform = Instantiate(bulletProjectilePrefab, shootPointTransform.position, Quaternion.identity);
         BulletProjectile bulletProjectile = bulletProjectileTransform.GetComponent<BulletProjectile>();
+        
         Vector3 targetUnitShootAtPosition = e.targetUnit.GetWorldPosition();
-        targetUnitShootAtPosition.y = shootPointTransform.transform.position.y;
+        float unitShoulderHeightOffset = 1.7f;
+        targetUnitShootAtPosition.y += unitShoulderHeightOffset;
+
         bulletProjectile.Setup(targetUnitShootAtPosition);
     }
 

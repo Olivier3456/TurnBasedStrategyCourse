@@ -79,7 +79,7 @@ public class Unit : MonoBehaviour
         }
 
         return null;
-    }    
+    }
 
     public BaseAction[] GetBaseActionArray()
     {
@@ -130,7 +130,7 @@ public class Unit : MonoBehaviour
     public Vector3 GetWorldPosition()
     {
         return transform.position;
-    } 
+    }
 
     public void Damage(int damageAmount)
     {

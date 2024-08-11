@@ -40,7 +40,7 @@ public class UnitActionSystem : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition()));
+        //Debug.Log(LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition()));
 
         if (isBusy)
         {
@@ -74,7 +74,7 @@ public class UnitActionSystem : MonoBehaviour
             return;
         }
 
-        GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
+        GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition_OnlyHitVisible());
         if (!selectedAction.IsValidActionGridPosition(mouseGridPosition))
         {
             return;
